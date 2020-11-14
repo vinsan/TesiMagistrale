@@ -70,7 +70,8 @@ public class GMailSender extends javax.mail.Authenticator {
                 message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));
             Transport.send(message);
         }catch (AuthenticationFailedException e){
-            Log.e(LOG_TAG, "Autenticazione fallita! Utente: "+user+" Password: "+password+". Ricordati di abilitare l'Accesso app meno sicure!");            Log.e(LOG_TAG, e.getClass().toString());
+            Log.e(LOG_TAG, "Autenticazione fallita! Utente: "+user+" Password: "+password+". Ricordati di abilitare l'Accesso app meno sicure!");
+            Log.e(LOG_TAG, e.getClass().toString());
         }catch(Exception e){
             Log.e(LOG_TAG, e.getClass().toString());
             if(e.getMessage()!=null)

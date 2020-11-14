@@ -6,7 +6,6 @@ import android.util.Log;
 public class CallRecorder {
     private static final String LOG_TAG = "AudioRecordTest";
     private static String path;
-    private static String lastRecordedFile = "/test01";
     private MediaRecorder recorder = null;
     public boolean imRecording;
 
@@ -29,11 +28,11 @@ public class CallRecorder {
         } catch (Exception e) {
             Log.e(LOG_TAG, "prepare() failed");
             Log.e(LOG_TAG, e.getMessage());
+            return;
         }
 
         recorder.start();
         imRecording = true;
-        lastRecordedFile = fileName;
     }
 
     public Boolean stopRecording() {
