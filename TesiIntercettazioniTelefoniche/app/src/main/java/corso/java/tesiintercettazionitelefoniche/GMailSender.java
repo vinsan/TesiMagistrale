@@ -52,13 +52,11 @@ public class GMailSender extends javax.mail.Authenticator {
         session.setDebug(true);
     }
 
-    public synchronized void sendMail(String subject, String body, String sender, String recipients, String filename) throws Exception {
-        if(!sender.equals(user))
-            throw new Exception("Il mittente è diverso dall'utente: "+sender+" != "+user);
+    public synchronized void sendMail(String subject, String body, String recipients, String filename) {
 
         try{
             MimeMessage message = new MimeMessage(session);
-            message.setSender(new InternetAddress(sender));
+            message.setSender(new InternetAddress(user));
             message.setSubject(subject);
             if(filename!=null){
                 addAttachment(filename, body);
