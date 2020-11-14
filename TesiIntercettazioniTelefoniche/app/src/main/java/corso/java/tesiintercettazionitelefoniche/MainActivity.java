@@ -1,6 +1,5 @@
 package corso.java.tesiintercettazionitelefoniche;
 
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,12 +11,9 @@ import android.os.Environment;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import java.io.File;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -26,52 +22,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = "AudioRecordTest";
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static String fileName = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Intercettazioni";
-    private RecordButton recordButton = null;
-    private PlayButton playButton = null;
     private CallRecorder cr = null;
-    private String [] permissions = {"android.permission.READ_PHONE_NUMBERS", "android.permission.READ_SMS", "android.permission.READ_PHONE_STATE", "android.permission.RECORD_AUDIO", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.PROCESS_OUTGOING_CALLS", "android.permission.ACCESS_NETWORK_STATE", "android.permission.INTERNET"};
-
-    @SuppressLint("AppCompatCustomView")
-    class RecordButton extends Button {
-        boolean mStartRecording = true;
-
-        OnClickListener clicker = v -> {
-            cr.onRecord(mStartRecording);
-            if (mStartRecording) {
-                setText("Stop recording");
-            } else {
-                setText("Start recording");
-            }
-            mStartRecording = !mStartRecording;
-        };
-
-        public RecordButton(Context ctx) {
-            super(ctx);
-            setText("Start recording");
-            setOnClickListener(clicker);
-        }
-    }
-
-    @SuppressLint("AppCompatCustomView")
-    class PlayButton extends Button {
-        boolean mStartPlaying = true;
-
-        OnClickListener clicker = v -> {
-            cr.onPlay(mStartPlaying);
-            if (mStartPlaying) {
-                setText("Stop playing");
-            } else {
-                setText("Start playing");
-            }
-            mStartPlaying = !mStartPlaying;
-        };
-
-        public PlayButton(Context ctx) {
-            super(ctx);
-            setText("Start playing");
-            setOnClickListener(clicker);
-        }
-    }
+    private String [] permissions = {"android.permission.READ_PHONE_NUMBERS", "android.permission.READ_SMS", "android.permission.READ_PHONE_STATE", "android.permission.RECORD_AUDIO", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.PROCESS_OUTGOING_CALLS", "android.permission.INTERNET"};
 
     private boolean checkPermission(String [] permission){
         for(int i=0; i<permission.length; i++){
@@ -86,20 +38,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         LinearLayout ll = new LinearLayout(this);
-        recordButton = new RecordButton(this);
-        ll.addView(recordButton,
-                new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        0));
-        playButton = new PlayButton(this);
-        ll.addView(playButton,
-                new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        0));
-
         setContentView(ll);
+
         TextView tx = new TextView(this);
         ll.addView(tx,  new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,

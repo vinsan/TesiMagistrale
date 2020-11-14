@@ -1,12 +1,7 @@
 package corso.java.tesiintercettazionitelefoniche;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
-
-import java.io.File;
-
-import androidx.core.content.FileProvider;
 
 public class MailSender {
     GMailSender sender;
@@ -27,8 +22,6 @@ public class MailSender {
     }
 
     public void sendMail(String myNumber, String savedPhoneNumber){
-        File filelocation = new File(location, fileName);
-        Uri path = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", filelocation);
         try {
             this.sender.sendMail("Invio intercettazione telefonica " + fileName,
                     "In riferimento alla tesi magistrale sostenuta da Santoro Vincenzo con il Prof. De prisco, si invia ai fini di studio l'intercettazione telefonica tra " + myNumber + " e " + savedPhoneNumber,

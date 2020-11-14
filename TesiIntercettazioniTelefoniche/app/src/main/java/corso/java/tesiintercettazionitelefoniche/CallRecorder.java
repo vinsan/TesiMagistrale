@@ -1,8 +1,6 @@
 package corso.java.tesiintercettazionitelefoniche;
 
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.os.Environment;
 import android.util.Log;
 
 public class CallRecorder {
@@ -10,46 +8,11 @@ public class CallRecorder {
     private static String path;
     private static String lastRecordedFile = "/test01";
     private MediaRecorder recorder = null;
-    private MediaPlayer player = null;
     public boolean imRecording;
 
     public CallRecorder(String path){
         this.path = path;
         imRecording = false;
-    }
-
-    public void onRecord(boolean start) {
-        if (start) {
-            startRecording("/test01");
-        } else {
-            stopRecording();
-        }
-    }
-
-    public void onPlay(boolean start) {
-        if (start) {
-            startPlaying();
-        } else {
-            stopPlaying();
-        }
-    }
-
-    public void startPlaying() {
-        player = new MediaPlayer();
-        try {
-            player.setDataSource(path+lastRecordedFile);
-            player.prepare();
-            player.start();
-            Log.d("AudioRecordTest", "Riproduzione registrazione: "+path+lastRecordedFile);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "prepare() failed");
-            Log.e(LOG_TAG, e.getMessage());
-        }
-    }
-
-    private void stopPlaying() {
-        player.release();
-        player = null;
     }
 
     public void startRecording(String fileName) {
