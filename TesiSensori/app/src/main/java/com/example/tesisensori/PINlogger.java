@@ -1,6 +1,6 @@
 package com.example.tesisensori;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,27 +11,22 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-public class GyroMic extends Activity {
+public class PINlogger extends AppCompatActivity {
 
-    final private String TAG = "GyroMic";
-    private TextView m_status;
-    private SensorManager m_sensorMgr;
-    private Sensor m_gyroscope;
-    private int m_numGyroUpdates;
-    private long m_startTime;
-    private BroadcastReceiver receiver;
+    final private String TAG = "PINlogger";
     private PrintWriter m_printWriter;
+    private SensorManager m_sensorMgr;
+    private Sensor m_accelerometer;
+    private BroadcastReceiver receiver;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.activity_pinlogger);
 
-        m_status = (TextView)findViewById(R.id.status);
         getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         try {
@@ -40,13 +35,12 @@ public class GyroMic extends Activity {
             String filepath = extra.getString("FILEPATH");
             Log.d(TAG, "Output file: " + filepath);
             m_printWriter = new PrintWriter(filepath);
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             Log.e(TAG, "File not found exception");
         }
 
         m_sensorMgr = (SensorManager) getSystemService(SENSOR_SERVICE);
-        m_gyroscope = m_sensorMgr.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        m_accelerometer = m_sensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         // register a shutdown intent handler
         receiver = new BroadcastReceiver() {
@@ -59,20 +53,16 @@ public class GyroMic extends Activity {
         registerReceiver(receiver, new IntentFilter("seclab.GyroMic.intent.action.SHUTDOWN"));
     }
 
-    @Override protected void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
-
-        m_startTime = System.currentTimeMillis();
-        m_numGyroUpdates = 0;
-        m_sensorMgr.registerListener(onSensorChange, m_gyroscope, SensorManager.SENSOR_DELAY_FASTEST);
+        m_sensorMgr.registerListener(onSensorChange, m_accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
-    @Override protected void onPause() {
+    @Override
+    protected void onPause() {
         super.onPause();
         m_sensorMgr.unregisterListener(onSensorChange);
-        long currentTime = System.currentTimeMillis();
-        long elapsedTime = currentTime - m_startTime;
-        Log.i(TAG, "Number of Gyroscope events: " + m_numGyroUpdates + ", Elapsed time: " + elapsedTime);
         m_printWriter.flush();
     }
 
@@ -92,8 +82,13 @@ public class GyroMic extends Activity {
 
         @Override
         synchronized public void onSensorChanged(SensorEvent event) {
-            ++m_numGyroUpdates;
-            m_printWriter.println(event.timestamp + " " + event.values[0] + " " + event.values[1] + " " + event.values[2]);
+            long time = event.timestamp;
+            float[] acceleration=event.values;  //x = 0, y = 1, z = 2
+            float ax=acceleration[0];
+            float ay=acceleration[1];
+            float az=acceleration[2];
+            String report = "Mtime "+time +" MX "+ax+" MY "+ay+" MZ "+az;
+            m_printWriter.println(report);
         }
     };
 

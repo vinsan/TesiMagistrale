@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Tesi Sensori</string>
+    <string name="giroscopio">Giroscopio</string>
+    <string name="accelerometro">Accelerometro</string>
 </resources>

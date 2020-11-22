@@ -6,10 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ListView
-        android:id="@+id/listview"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/gyro"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="62dp"
-        tools:layout_editor_absoluteY="161dp" />
+        android:text="@string/giroscopio"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/accelerometro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/accelerometro"
+        app:layout_constraintStart_toEndOf="@+id/gyro"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
