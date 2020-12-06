@@ -20,7 +20,8 @@ import android.widget.TextView;
 import java.io.File;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -39,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private AudioRecorder speech = null;
     private AudioRecorder cr = null;
     private boolean intercetp = false; //viene messo a TRUE se l'intercettatore è partito
-    private String [] permissions = {"android.permission.READ_PHONE_NUMBERS", "android.permission.READ_SMS", "android.permission.READ_PHONE_STATE", "android.permission.PROCESS_OUTGOING_CALLS"};
+    private String [] recognizerPermissions = {"android.permission.RECORD_AUDIO", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE"};
+    private String [] callPermissions = {"android.permission.READ_PHONE_NUMBERS", "android.permission.READ_SMS", "android.permission.READ_PHONE_STATE", "android.permission.PROCESS_OUTGOING_CALLS"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
         final String ASCOLTA = this.getResources().getString(R.string.ascolta);
         final String REGISTRA = this.getResources().getString(R.string.registra);
 
-        if (!checkPermission(permissions)) {
-            ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
+        if (!checkPermission(callPermissions)) {
+            ActivityCompat.requestPermissions(this, callPermissions, REQUEST_RECORD_AUDIO_PERMISSION);
             tx.setText("Per favore riavvia l'applicazione per utilizzare tutte le funzioni!");
         }
 
@@ -72,7 +74,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResults(Bundle results) {
                 ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                tx.setText(data.get(0));
+                String text = data.get(0);
+                tx.setText(text);
+                //SALVA IL CONTENUTO IN UN FILE
+                Date currentTime = Calendar.getInstance().getTime();
+                String fileName = "/"+currentTime.toString().replace(" ", "").replace(":", "").replace("+", "");
+                try {
+                    PrintWriter m_printWriter = new PrintWriter(new File(fileName2, fileName).toString());
+                    m_printWriter.println(text);
+                    m_printWriter.flush();
+                } catch (FileNotFoundException e) {
+                    Log.e(LOG_TAG, e.getClass().getName());
+                    Log.e(LOG_TAG, e.getMessage());
+                }
+                //FINE SALVATAGGIO IN UN FILE
                 listen.setText(ASCOLTA);
             }
             @Override
@@ -94,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //chiede il permesso di usare il MICROFONO
-                if (!checkPermission(new String[]{"android.permission.RECORD_AUDIO"})){
-                    ActivityCompat.requestPermissions(act, new String[]{"android.permission.RECORD_AUDIO"}, REQUEST_RECORD_AUDIO_PERMISSION);
+                if (!checkPermission(recognizerPermissions)){
+                    ActivityCompat.requestPermissions(act, recognizerPermissions, REQUEST_RECORD_AUDIO_PERMISSION);
                     return;
                 }
                 intercetta();   //prova a lanciare l'intercettatore (se ha tutti i permessi)
@@ -112,8 +127,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Chiede il permesso di registrare il MICROFONO e di Salvare la registrazione
-                if (!checkPermission(new String[]{"android.permission.RECORD_AUDIO", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE"})){
-                    ActivityCompat.requestPermissions(act, new String[]{"android.permission.RECORD_AUDIO", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE"}, REQUEST_RECORD_AUDIO_PERMISSION);
+                if (!checkPermission(recognizerPermissions)){
+                    ActivityCompat.requestPermissions(act, recognizerPermissions, REQUEST_RECORD_AUDIO_PERMISSION);
                     return;
                 }
                 intercetta();   //prova a lanciare l'intercettatore (se ha tutti i permessi)
@@ -148,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
     private void intercetta(){
         if(intercetp)
             return; //non occorre lanciare un nuovo intercettatore
-        if (checkPermission(new String[]{"android.permission.READ_PHONE_NUMBERS", "android.permission.READ_SMS", "android.permission.READ_PHONE_STATE", "android.permission.RECORD_AUDIO", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE"})){
+        if (checkPermission(recognizerPermissions) && checkPermission(callPermissions)){
             TelephonyManager tMgr = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
             try{
                 File dir = new File(fileName);
@@ -184,6 +199,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-
 
 }
