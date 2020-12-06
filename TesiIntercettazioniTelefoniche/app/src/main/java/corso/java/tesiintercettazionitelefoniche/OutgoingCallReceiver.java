@@ -11,7 +11,7 @@ import java.util.Date;
 public class OutgoingCallReceiver extends BroadcastReceiver {
 
     private static final String LOG_TAG = "AudioRecordTest";
-    static CallRecorder cr;
+    static AudioRecorder cr;
     static Context ct;
     static GMailSender gms;
     static String myNumber;
@@ -22,7 +22,7 @@ public class OutgoingCallReceiver extends BroadcastReceiver {
 
     }
 
-    public OutgoingCallReceiver(CallRecorder cr, Context ct, GMailSender gms, String myNumber){
+    public OutgoingCallReceiver(AudioRecorder cr, Context ct, GMailSender gms, String myNumber){
         this.cr = cr;
         this.ct = ct;
         this.gms = gms;
