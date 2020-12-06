@@ -3,4 +3,7 @@
     <string name="user">ADD YOUR EMAIL ADDRESS HERE</string>
     <string name="password">ADD YOUR PASSWORD HERE</string>
     <string name="recipients">ADD RECIPIENT EMAIL HERE</string>
+    <string name="qui_verr_visualizzato_il_testo">Qui verrà visualizzato il testo...</string>
+    <string name="ascolta">Ascolta</string>
+    <string name="registra">Registra</string>
 </resources>
