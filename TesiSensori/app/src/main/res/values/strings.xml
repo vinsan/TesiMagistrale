@@ -8,4 +8,5 @@
     <string name="magnetometro">Magnetometro</string>
     <string name="barometro">Barometro</string>
     <string name="fotometro">Fotometro</string>
+    <string name="orientamento">Orientamento</string>
 </resources>

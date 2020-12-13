@@ -1,7 +1,6 @@
 package com.example.tesisensori;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +12,6 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
-
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
@@ -139,6 +137,10 @@ public class SensorActivity extends AppCompatActivity {
                         tx.setText(tx.getText()+"\n"+report);
                     }
                 }
+            }else if(sensorID==Sensor.TYPE_ORIENTATION){
+                String val = event.timestamp + " " + event.values[0] + " " + event.values[1] + " " + event.values[2];
+                m_printWriter.println(val);
+                tx.setText(val);
             }
         }
     };

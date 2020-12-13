@@ -8,7 +8,6 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import java.io.File;
-
 import androidx.core.app.ActivityCompat;
 
 public class SensorClickListener implements View.OnClickListener {

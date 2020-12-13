@@ -40,10 +40,6 @@ public class MainActivity extends AppCompatActivity {
             Log.d(LOG_TAG, "Sul dispositivo è presente un sensore per l'acceleraizone lineare");
             i++;
         }
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION) != null) {
-            Log.d(LOG_TAG, "Sul dispositivo è presente un sensore per l'orientamento");
-            i++;
-        }
         if (sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY) != null) {
             Log.d(LOG_TAG, "Sul dispositivo è presente un sensore per l'umidità");
             i++;
@@ -91,6 +87,12 @@ public class MainActivity extends AppCompatActivity {
             i++;
             Button light = findViewById(R.id.light);
             light.setOnClickListener(new SensorClickListener(ctx, act, "light_log", Sensor.TYPE_LIGHT));
+        }
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION) != null) {
+            Log.d(LOG_TAG, "Sul dispositivo è presente un sensore per l'orientamento");
+            i++;
+            Button orientation = findViewById(R.id.orientation);
+            orientation.setOnClickListener(new SensorClickListener(ctx, act, "orientation_log", Sensor.TYPE_ORIENTATION));
         }
         Log.d(LOG_TAG, "Ci sono "+i+" categorie di sensori su 13.");
     }
